@@ -9,7 +9,6 @@ import sys
 import os
 
 # --- SETUP ---
-
 edge_options = Options()
 # edge_options.add_argument("--start-maximized")
 driver_path = "msedgedriver.exe"
@@ -19,10 +18,9 @@ service = Service(executable_path=driver_path)  # make sure msedgedriver is in t
 driver = webdriver.Edge(service=service, options=edge_options)
 
 driver.get("https://ticket.expo2025.or.jp/en/")
-
-input("Navigate to the reservation page and press ENTER here to start monitoring...")
-# Get the current URL of the reservation page
-reservation_page = driver.current_url
+refresh_url = "https://ticket.expo2025.or.jp/en/myticket/"
+reservation_page = ""
+timer = 0
 
 # --- FUNCTIONS ---
 def wait_for_page_load(driver, timeout=30):
@@ -35,6 +33,45 @@ def wait_for_reservation_page(driver, timeout=30):
     )
 
 # --- MAIN LOOP ---
+# Refresh monitoring loop
+while True:
+    current_url = driver.current_url
+    if current_url == refresh_url:
+        if timer >= 10:  # TODO: 120
+            print("[INFO] Trying to click the <li> element...")
+            timer = 0
+            try:
+                element = driver.find_element(
+                    By.CSS_SELECTOR,
+                    'li[data-menu-index="2"]'
+                )
+                element.click()
+                print("[INFO] Clicked the <li> element successfully.")
+            except Exception as e:
+                print(f"[ERROR] Could not click the element: {e}")
+        else:
+            time.sleep(1)
+            timer += 1
+    elif "system_error" in current_url:
+        print("[INFO] An error occurred on the webpage, trying to load the refresh URL...")
+        timer = 0
+        driver.get(refresh_url)
+    else:
+        input("Navigate to My Tickets page and press ENTER here to start refreshing, or "
+              "navigate to the reservation page and press ENTER here to start monitoring...")
+        current_url = driver.current_url
+        if current_url != refresh_url:
+            print("[INFO] Reservation mode started.")
+            # Get the current URL of the reservation page
+            reservation_page = current_url
+            break
+        else:
+            print("[INFO] Refresh mode started. "
+                  "Scroll the \"My Tickets\" button out of view to pause, or "
+                  "navigate to the reservation page and press ENTER here to start monitoring.")
+            continue
+
+# Reservation monitoring loop
 while True:
     try:
         # wait for the page to load completely
