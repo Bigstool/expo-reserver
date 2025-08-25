@@ -97,8 +97,6 @@ def monitor_loop(driver, reservation_page: str):
                 button.click()
 
                 print("Reservation attempted!")
-                # Wait for an extra few seconds
-                time.sleep(25)
             else:
                 print("No available slots yet...")
 
