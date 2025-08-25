@@ -29,7 +29,7 @@ def refresh_loop(driver) -> str:
     while True:
         current_url = driver.current_url
         if current_url == refresh_url:
-            if timer >= 10:  # TODO: 120
+            if timer >= 120:
                 print("[INFO] Trying to click the <li> element...")
                 timer = 0
                 try:
