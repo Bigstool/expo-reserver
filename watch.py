@@ -33,15 +33,15 @@ def wait_for_reservation_page(driver, timeout=30):
 # --- MAIN LOOP ---
 while True:
     try:
-        # wait for the page to load completely
-        wait_for_reservation_page(driver)
-
         # if not on reservation page, reload it
         if driver.current_url != reservation_page:
             print("Not on reservation page, reloading...")
             time.sleep(5)
             driver.get(reservation_page)
             continue
+
+        # wait for the page to load completely
+        wait_for_reservation_page(driver)
 
         # find all available time slot radio buttons
         radios = driver.find_elements(By.CSS_SELECTOR, "input[type='radio'].style_time_picker__radio__1c6YB:not([disabled])")
