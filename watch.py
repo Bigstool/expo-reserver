@@ -25,6 +25,10 @@ input("Navigate to the reservation page and press ENTER here to start monitoring
 reservation_page = driver.current_url
 
 # --- FUNCTIONS ---
+def wait_for_page_load(driver, timeout=30):
+    WebDriverWait(driver, timeout).until(
+        lambda d: d.execute_script("return document.readyState") == "complete"
+    )
 def wait_for_reservation_page(driver, timeout=30):
     WebDriverWait(driver, timeout).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='radio'].style_time_picker__radio__1c6YB"))
@@ -33,6 +37,9 @@ def wait_for_reservation_page(driver, timeout=30):
 # --- MAIN LOOP ---
 while True:
     try:
+        # wait for the page to load completely
+        wait_for_page_load(driver)
+
         # if not on reservation page, reload it
         if driver.current_url != reservation_page:
             print("Not on reservation page, reloading...")
@@ -40,7 +47,7 @@ while True:
             driver.get(reservation_page)
             continue
 
-        # wait for the page to load completely
+        # wait for the reservation page to load
         wait_for_reservation_page(driver)
 
         # find all available time slot radio buttons
