@@ -22,7 +22,6 @@ def wait_for_reservation_page(driver, timeout=30):
     )
 
 
-# Refresh monitoring loop
 def refresh_loop(driver) -> str:
     refresh_url = "https://ticket.expo2025.or.jp/en/myticket/"
     timer = 0
@@ -50,12 +49,12 @@ def refresh_loop(driver) -> str:
             driver.get(refresh_url)
         else:
             input("Navigate to My Tickets page and press ENTER here to start refreshing, or "
-                  "navigate to the reservation page and press ENTER here to start monitoring...")
+                  "navigate to the reservation page and press ENTER here to start reserving...")
             current_url = driver.current_url
             if current_url == refresh_url:
                 print("[INFO] Refresh mode started. "
                       "Scroll the \"My Tickets\" button out of view to pause, or "
-                      "navigate to the reservation page and press ENTER here to start monitoring.")
+                      "navigate to the reservation page and press ENTER here to start reserving.")
                 continue
             else:
                 print("[INFO] Reservation mode started.")
@@ -63,7 +62,7 @@ def refresh_loop(driver) -> str:
                 return current_url
 
 
-def monitor_loop(driver, reservation_page: str):
+def reserve_loop(driver, reservation_page: str):
     while True:
         try:
             # wait for the page to load completely
@@ -109,19 +108,19 @@ def monitor_loop(driver, reservation_page: str):
 
 
 def main():
-    edge_options = Options()
-    # edge_options.add_argument("--start-maximized")
+    options = Options()
+    # options.add_argument("--start-maximized")
     driver_path = "msedgedriver.exe"
-    if getattr(sys, 'frozen', False):
+    if getattr(sys, 'frozen', False):  # For PyInstaller
         driver_path = os.path.join(sys._MEIPASS, driver_path)
-    service = Service(executable_path=driver_path)  # make sure msedgedriver is in the same folder or PATH
-    driver = webdriver.Edge(service=service, options=edge_options)
+    service = Service(executable_path=driver_path)
+    driver = webdriver.Edge(service=service, options=options)
 
     driver.get("https://ticket.expo2025.or.jp/en/")
 
     while True:
         reservation_page = refresh_loop(driver)
-        monitor_loop(driver, reservation_page)
+        reserve_loop(driver, reservation_page)
 
 
 if __name__ == "__main__":
