@@ -76,28 +76,37 @@ def reserve_loop(driver, reservation_page: str):
             # wait for the reservation page to load
             wait_for_reservation_page(driver)
 
-            # find all available time slot radio buttons
-            radios = driver.find_elements(By.CSS_SELECTOR,
-                                          "input[type='radio'].style_time_picker__radio__1c6YB:not([disabled])")
+            # Same day reservation
+            make_reserve = driver.find_element(By.CSS_SELECTOR,
+                                               "button.style_book_now_button__aj3PG")
+            if make_reserve:
+                driver.execute_script("arguments[0].scrollIntoView(true);", make_reserve)
+                make_reserve.click()
+                print("Attempted same day reservation.")
 
-            if radios:
-                print("Found available slot! Attempting to book...")
-
-                # click the first available radio
-                driver.execute_script("arguments[0].scrollIntoView(true);", radios[0])
-                # time.sleep(1)
-                radios[0].click()
-
-                # find and click the submit button
-                button = driver.find_element(By.CSS_SELECTOR,
-                                             "button.basic-btn.type2.style_reservation_next_link__7gOxy")
-                driver.execute_script("arguments[0].scrollIntoView(true);", button)
-                # time.sleep(1)
-                button.click()
-
-                print("Reservation attempted!")
             else:
-                print("No available slots yet...")
+                # find all available time slot radio buttons
+                radios = driver.find_elements(By.CSS_SELECTOR,
+                                              "input[type='radio'].style_time_picker__radio__1c6YB:not([disabled])")
+
+                if radios:
+                    print("Found available slot! Attempting to book...")
+
+                    # click the first available radio
+                    driver.execute_script("arguments[0].scrollIntoView(true);", radios[0])
+                    # time.sleep(1)
+                    radios[0].click()
+
+                    # find and click the submit button
+                    button = driver.find_element(By.CSS_SELECTOR,
+                                                 "button.basic-btn.type2.style_reservation_next_link__7gOxy")
+                    driver.execute_script("arguments[0].scrollIntoView(true);", button)
+                    # time.sleep(1)
+                    button.click()
+
+                    print("Reservation attempted!")
+                else:
+                    print("No available slots yet...")
 
         except Exception as e:
             print(f"Error occurred: {e}")
