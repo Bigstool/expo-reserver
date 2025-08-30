@@ -77,11 +77,11 @@ def reserve_loop(driver, reservation_page: str):
             wait_for_reservation_page(driver)
 
             # Same day reservation
-            make_reserve = driver.find_element(By.CSS_SELECTOR,
+            make_reserve = driver.find_elements(By.CSS_SELECTOR,
                                                "button.style_book_now_button__aj3PG")
             if make_reserve:
-                driver.execute_script("arguments[0].scrollIntoView(true);", make_reserve)
-                make_reserve.click()
+                driver.execute_script("arguments[0].scrollIntoView(true);", make_reserve[0])
+                make_reserve[0].click()
                 print("Attempted same day reservation.")
 
             else:
@@ -119,7 +119,7 @@ def reserve_loop(driver, reservation_page: str):
 def main():
     options = Options()
     # options.add_argument("--start-maximized")
-    driver_path = "msedgedriver.exe"
+    driver_path = "./msedgedriver"
     if getattr(sys, 'frozen', False):  # For PyInstaller
         driver_path = os.path.join(sys._MEIPASS, driver_path)
     service = Service(executable_path=driver_path)
