@@ -119,7 +119,7 @@ def reserve_loop(driver, reservation_page: str):
 def main():
     options = Options()
     # options.add_argument("--start-maximized")
-    driver_path = "./msedgedriver"
+    driver_path = "msedgedriver.exe"
     if getattr(sys, 'frozen', False):  # For PyInstaller
         driver_path = os.path.join(sys._MEIPASS, driver_path)
     service = Service(executable_path=driver_path)
