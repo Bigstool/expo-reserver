@@ -5,8 +5,6 @@ from selenium.webdriver.edge.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 import time
-import sys
-import os
 
 
 def wait_for_page_load(driver, timeout=30):
@@ -76,13 +74,13 @@ def reserve_loop(driver, reservation_page: str):
             # wait for the reservation page to load
             wait_for_reservation_page(driver)
 
-            # Same day reservation
+            # on-site reservation
             make_reserve = driver.find_elements(By.CSS_SELECTOR,
-                                               "button.style_book_now_button__aj3PG")
+                                                "button.style_book_now_button__aj3PG")
             if make_reserve:
                 driver.execute_script("arguments[0].scrollIntoView(true);", make_reserve[0])
                 make_reserve[0].click()
-                print("Attempted same day reservation.")
+                print("Attempted on-site reservation.")
 
             else:
                 # find all available time slot radio buttons
@@ -90,7 +88,7 @@ def reserve_loop(driver, reservation_page: str):
                                               "input[type='radio'].style_time_picker__radio__1c6YB:not([disabled])")
 
                 if radios:
-                    print("Found available slot! Attempting to book...")
+                    print("Found an available slot! Attempting to book...")
 
                     # click the first available radio
                     driver.execute_script("arguments[0].scrollIntoView(true);", radios[0])
@@ -118,10 +116,7 @@ def reserve_loop(driver, reservation_page: str):
 
 def main():
     options = Options()
-    # options.add_argument("--start-maximized")
     driver_path = "msedgedriver.exe"
-    if getattr(sys, 'frozen', False):  # For PyInstaller
-        driver_path = os.path.join(sys._MEIPASS, driver_path)
     service = Service(executable_path=driver_path)
     driver = webdriver.Edge(service=service, options=options)
 
