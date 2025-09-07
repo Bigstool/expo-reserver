@@ -46,6 +46,8 @@ Reserve mode will continuously check for the availability of the pavilion and at
 
 It is recommended to leave it running until you reserve successfully, as the reservation slots will become available again if someone cancels their reservation.
 
+To stop the reserve mode, navigate to another webpage.
+
 You can open multiple instances of `reserve.exe` and run them in parallel for the same pavilion or different pavilions to increase your chances.
 
 ### Stop
